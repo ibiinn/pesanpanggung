@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirim Pesan</title>
+    <style>
+        body { 
+            background: #991b1b; 
+            font-family: sans-serif; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            background-image: url("/bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            width: 85%; 
+            max-width: 400px; 
+        }
+
+        h2 { 
+            margin-top: -0.2rem;
+            font-size: 2.4rem;
+            text-align: center; 
+            color: #9e041b; 
+            margin-bottom: 5px; 
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.6);
+        }
+        
+        input, textarea { 
+            padding: 15px; 
+            border-radius: 15px; 
+            background: rgba(0, 0, 0, 0.5); 
+            color: rgb(255, 207, 207); 
+            border: none; 
+            font-size: 1rem; 
+            outline: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        input:focus, textarea:focus { 
+            border-color: rgb(255, 207, 207); 
+        }
+        
+        textarea { 
+            height: 120px; 
+            resize: none; 
+        }
+        
+        button { 
+            padding: 15px; 
+            background: #9e041b; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            color: rgb(255, 207, 207); 
+            cursor: pointer; 
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        button:active { 
+            transform: scale(0.98); 
+        }
+
+        .cb input{
+            margin-top: -1.3rem;
+            background-color: #db3b38;
+            align-items: center;
+            display: none;
+        }
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 1px solid rgb(255, 207, 207);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: -1rem;
+            justify-content: center;
+        }
+
+        .cb input:checked + .checkmark {
+            background: #11662d;
+            border-color: rgb(255, 207, 207);
+        }
+
+        .cb input:checked + .checkmark::after {
+            content: "✓";
+            color: white;
+        }
+
+        .checkbox-wrap {
+            display: flex;
+            justify-content: center;
+        }
+
+        p {
+            margin-bottom: 1.8rem;
+            text-align: center;
+            color: rgb(255, 207, 207);
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.6);
+        }
+        
+        form .sawer {
+            font-weight: bolder;
+        }
+
+        .wrap {
+            background-color: rgb(0, 0, 0, 0.4);
+            padding: 0.5rem;
+            border-radius: 15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        a {
+            text-align: center;
+            color: rgb(0, 0, 89);
+            background-color: rgb(255, 207, 207);
+            padding: 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            color:#db3b38;
+        }
+
+        .footer {
+            width: 100%;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 0.85rem;
+            color: rgb(255, 207, 207);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .footer .fbrand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer .fbrand a {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            color: #ffb3b3;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+
+        .footer .fbrand a:hover {
+            color: #fff;
+        }
+
+        .footer .fbrand .sep {
+            color: rgba(255,255,255,0.2);
+        }
+
+        
+
+    </style>
+</head>
+<body>
+    <div class="main-content">
+    <form id="f">
+        <h2>Kirim Pesan</h2>
+        <div class="wrap">
+            <p>Saya bertanggung jawab atas chat yang saya tampilkan di layar dan bersedia untuk tidak menggunakan kata-kata yang tidak pantas.<br></p>
+            <div class="checkbox-wrap">
+                <label class="cb">
+                    <input type="checkbox" id="agree">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
+        <input id="u" type="text" placeholder="Username (max 10 char)" maxlength="10" required>
+        <textarea id="i" placeholder="Ketik pesanmu..." required maxlength=""></textarea>
+        <button type="submit">kirim sekarang</button>
+        <!-- <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center;"> -->
+            <a href="https://saweria.co/saintdiva">Request/Sawer</a>
+            <!-- <a href="/request">Request Lagu Berbayar</a> -->
+        </div>
+
+    </form>
+    </div>
+
+    <footer class="footer">
+        <div class="fbrand">
+            <span>follow instagram kami</span>
+            <a href="https://instagram.com/hai.space" target="_blank" rel="noopener">@hai.space</a>
+            <span class="sep">|</span>
+            <a href="https://instagram.com/saintdivamusic" target="_blank" rel="noopener">@saintdivamusic</a>
+        </div>
+        <div class="fbrand" style="margin-top: 6px;">
+            <span style="font-size:0.75rem; opacity:0.7;">website dibuat oleh</span>
+            <a href="https://instagram.com/ibiinn_" target="_blank" rel="noopener" style="font-size:0.75rem; opacity:0.7;">@ibiinn_</a>
+        </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('f');
+        const inputUser = document.getElementById('u');
+        const inputMsg = document.getElementById('i');
+        const agree = document.getElementById('agree');
+        const btn = document.querySelector("button[type='submit']");
+
+        socket.on('connect', () => {
+            console.log('Socket.io send connected:', socket.id);
+        });
+
+        socket.on('disconnect', (reason) => {
+            console.warn('Socket.io send disconnected:', reason);
+            alert('Koneksi terputus. Reload halaman sebelum mengirim pesan.');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Socket.io send connect error:', error);
+            alert('Tidak dapat terhubung ke server. Pastikan server berjalan.');
+        });
+        const savedUsername = localStorage.getItem("locked_username");
+        const user = inputUser.value.trim();
+        const bannedWords = ["anjing", "babi", "kontol", "memek", "ngentot", "tai"];
+        const MAX_WORDS = 20;
+        
+        function containsBadWord(text) {
+            const lower = text.toLowerCase();
+            return bannedWords.some(word => lower.includes(word));
+        }
+
+        function countWords(text) {
+            return text.trim().split(/\s+/).length;
+        }
+
+        if (savedUsername) {
+            inputUser.value = savedUsername;
+            inputUser.readOnly = true;      // kunci input
+            inputUser.style.opacity = "0.7";
+            inputUser.style.cursor = "not-allowed";
+        }
+
+        // Load username terakhir biar gak ngetik ulang terus
+        if(localStorage.getItem('my_username')) {
+            inputUser.value = localStorage.getItem('my_username');
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const user = inputUser.value.trim();
+            const text = inputMsg.value.trim();
+
+            if (!agree.checked) {
+                e.preventDefault();
+                alert("Centang checkbox dulu sebelum kirim pesan!");
+                return;
+            }
+
+            if (!user || !text) return; 
+
+            if (!localStorage.getItem("locked_username") && user) {
+                localStorage.setItem("locked_username", user);
+                inputUser.readOnly = true;
+                inputUser.style.opacity = "0.7";
+                inputUser.style.cursor = "not-allowed";
+            }
+
+            if (countWords(text) > MAX_WORDS) {
+                alert(`Pesan maksimal ${MAX_WORDS} kata!`);
+                return;
+            }
+
+            if (containsBadWord(text)) {
+                alert("Pesan mengandung kata tidak pantas!");
+                return;
+            }
+
+            socket.emit('new_message', { 
+                    username: user, 
+                    text,
+                    deviceId,
+                    agree: true
+            });
+         });
+        
+        socket.on("send_success", () => {
+            inputMsg.value = "";   // pesan kehapus
+            inputMsg.focus();     // cursor balik ke input
+        });
+        socket.on("username_taken", () => {
+            alert("Username sudah dipakai user lain, ganti ya!");
+        });
+
+        let deviceId = localStorage.getItem("device_id");
+        if (!deviceId) {
+            deviceId = crypto.randomUUID(); // browser modern
+            localStorage.setItem("device_id", deviceId);
+        }
+
+        socket.on("username_locked", () => {
+            alert("Usernamenya gaboleh diganti yaa kak :)");
+        });
+
+        socket.on("send_success", () => {
+            alert("Terkirim!");
+        });
+
+        socket.on("must_check_agree", () => {
+            alert("Centang checkbox dulu sebelum kirim pesan!");
+        });
+
+        socket.on("max_word_exceeded", () => {
+            alert("Pesan terlalu panjang! Maksimal 20 kata.");
+        });
+
+        socket.on("bad_word", () => {
+            alert("Pesan mengandung kata yang tidak pantas!");
+        });
+
+        socket.on("user_banned", () => {
+            alert("Username kamu telah di-ban oleh admin. Hubungi admin jika ada pertanyaan.");
+            inputUser.disabled = true;
+            inputMsg.disabled = true;
+            btn.disabled = true;
+        });
+
+    </script>
+</body>
+</html>

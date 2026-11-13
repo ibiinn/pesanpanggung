@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Message</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* ===================== SCREEN CONTAINER — iPad-like (sedikit lebih kecil) ===================== */
+        .screen-container {
+            width: 700px;
+            max-width: 100%;
+            height: 980px;
+            max-height: calc(100vh - 40px);
+            background: transparent;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 20px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen-container > #message-container {
+            min-height: 0;
+            z-index: 1;
+        }
+
+        /* ===================== CHAT BOX — WHATSAPP GROUP STYLE ===================== */
+        #message-container {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 4px;
+            padding: 8px 4px;
+            background: transparent;
+            border-radius: 6px;
+            overflow-y: auto;
+        }
+
+        #message-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #message-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #message-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        /* ===================== MESSAGE BUBBLES ===================== */
+
+        /* --- Incoming (user messages) --- */
+        .msg-card {
+            display: flex;
+            gap: 20px;
+            max-width: 92%;
+            align-self: flex-start;
+            align-items: flex-end;
+            animation: wa-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* --- Outgoing (admin) --- */
+        .msg-card.msg-admin {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        @keyframes wa-in {
+            0% { opacity: 0; transform: translateY(16px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Avatar */
+        .msg-avatar-wrap {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.08);
+            background: #2a3942;
+        }
+
+        .msg-avatar {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            object-fit: cover;
+            object-position: center 25%;
+            transform: scale(1.4);
+        }
+
+
+        .msg-body {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        /* Sender name */
+        .msg-user {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            padding-left: 2px;
+            display: block;
+        }
+
+        .msg-user.hidden {
+            display: none;
+        }
+
+        .msg-admin .msg-user {
+            text-align: right;
+        }
+
+        /* The bubble itself */
+        .msg-bubble {
+            padding: 14px 20px 12px 20px;
+            border-radius: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-height: 32px;
+        }
+
+        /* Incoming bubble — WhatsApp dark */
+        .msg-card:not(.msg-admin) .msg-bubble {
+            background: #202c33;
+            border-top-left-radius: 0;
+        }
+
+        /* Outgoing bubble — Luxury Red */
+        .msg-admin .msg-bubble {
+            background: linear-gradient(145deg, rgba(139, 0, 0, 0.95), rgba(70, 0, 0, 0.95));
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-top-right-radius: 0;
+        }
+
+        /* Grouped: not first in group */
+        .msg-card.grouped-above .msg-bubble {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        /* Grouped: not last in group */
+        .msg-card.grouped-below .msg-bubble {
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .msg-card.grouped-above.grouped-below .msg-bubble {
+            border-radius: 12px;
+        }
+
+        /* Message text */
+        .msg-text {
+            font-size: 2.1rem;
+            line-height: 1.5;
+            color: #e9edef;
+            white-space: pre-wrap;
+        }
+
+        .msg-admin .msg-text {
+            color: #f5e6d3;
+        }
+
+        /* Timestamp + status row */
+        .msg-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+
+        .msg-time {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.4);
+            flex-shrink: 0;
+        }
+
+        .msg-admin .msg-time {
+            color: rgba(212, 175, 55, 0.45);
+        }
+
+        /* Checkmark for admin */
+        .msg-check {
+            font-size: 0.9rem;
+            color: rgba(212, 175, 55, 0.5);
+            flex-shrink: 0;
+            letter-spacing: -1px;
+        }
+
+        /* Group spacing */
+        .msg-card.group-start {
+            margin-top: 10px;
+        }
+
+        /* Extra spacing when switching between admin and user */
+        .msg-card.admin-spacer {
+            margin-top: 18px;
+        }
+
+        .empty {
+            color: #8696a0;
+            text-align: center;
+            padding: 60px 20px;
+            font-style: italic;
+            font-size: 1.8rem;
+            align-self: center;
+            width: 100%;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+        }
+
+        /* ===================== TOP BAR (inside screen) ===================== */
+        .screen-topbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            margin-bottom: 8px;
+            padding: 0 4px;
+        }
+
+        .screen-topbar .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #f5e6d3;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .screen-topbar .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff1a1a;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 26, 26, 0.8), 0 0 20px rgba(139, 0, 0, 0.4);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        .screen-topbar .viewer-count {
+            color: rgba(255,255,255,0.35);
+            font-size: 0.75rem;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="screen-container">
+        <!-- Top bar -->
+        <div class="screen-topbar">
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                LIVE
+            </div>
+            <span class="viewer-count">Pesan Langsung</span>
+        </div>
+
+        <div id="message-container">
+            <div class="empty">Menunggu pesan...</div>
+        </div>
+    </div>
+
+   <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io();
+        const container = document.getElementById('message-container');
+
+        let lastMessageCount = 0;
+
+        // =====================
+        // WHATSAPP NAME COLORS
+        // =====================
+        const NAME_COLORS = [
+            '#5fa8d3', '#e5554f', '#68a048', '#d4974a',
+            '#a889b5', '#e05d8b', '#62b0c2', '#e8a838',
+            '#70a5eb', '#d46a6a', '#6fb36f'
+        ];
+
+        function getNameColor(name) {
+            let hash = 5381;
+            for (let i = 0; i < name.length; i++) {
+                hash = ((hash << 5) + hash) + name.charCodeAt(i);
+            }
+            return NAME_COLORS[Math.abs(hash) % NAME_COLORS.length];
+        }
+
+        function getMinionIndex(name) {
+            let hash = 5381;
+            for (let i = 0; i < name.length; i++) {
+                hash = ((hash << 5) + hash) + name.charCodeAt(i);
+            }
+            return (Math.abs(hash) % 16) + 1;
+        }
+
+        // =====================
+        // RENDER — WhatsApp Group Style
+        // =====================
+        function render(msgs) {
+            container.innerHTML = '';
+
+            if (!msgs || msgs.length === 0) {
+                container.innerHTML = `<div class="empty">Belum ada pesan...</div>`;
+                lastMessageCount = 0;
+                return;
+            }
+
+            const reversed = msgs.slice().reverse();
+            const isNewMessageArrived = msgs.length > lastMessageCount;
+            lastMessageCount = msgs.length;
+
+            reversed.forEach((msg, i) => {
+                const isAdmin = msg.username === 'ADMIN';
+
+                // ---- Determine grouping ----
+                const newerMsg = reversed[i - 1]; // below in display (newer)
+                const olderMsg = reversed[i + 1]; // above in display (older)
+
+                const isSameAsNewer = newerMsg && newerMsg.username === msg.username;
+                const isSameAsOlder = olderMsg && olderMsg.username === msg.username;
+
+                const isFirstInGroup = !isSameAsNewer;  // bottom-most of group (newest)
+                const isLastInGroup = !isSameAsOlder;    // top-most of group (oldest)
+
+                // ---- Build elements ----
+                const div = document.createElement('div');
+                div.className = 'msg-card';
+
+                if (isAdmin) {
+                    div.classList.add('msg-admin');
+                }
+
+                // Grouped styling
+                if (!isFirstInGroup) div.classList.add('grouped-above');
+                if (!isLastInGroup) div.classList.add('grouped-below');
+
+                // Spacing between groups — extra spacing if admin <-> user switch
+                if (isFirstInGroup && i > 0) {
+                    const isPrevAdmin = newerMsg && newerMsg.username === 'ADMIN';
+                    const switchingToOrFromAdmin = isAdmin !== isPrevAdmin;
+                    if (switchingToOrFromAdmin && isPrevAdmin !== undefined) {
+                        div.classList.add('admin-spacer');
+                    } else {
+                        div.classList.add('group-start');
+                    }
+                }
+
+                // New message animation
+                if (isNewMessageArrived && i === 0) {
+                    div.style.animation = 'wa-in 0.3s cubic-bezier(0.22, 1, 0.36, 1)';
+                }
+
+                const nameColor = isAdmin ? '#d4af37' : getNameColor(msg.username);
+
+                div.innerHTML = `
+                    ${!isAdmin ? `
+                    <div class="msg-avatar-wrap">
+                        <img class="msg-avatar"
+                             src="avatars/minion${getMinionIndex(msg.username)}.png"
+                             alt="" loading="lazy" />
+                    </div>` : ''}
+                    <div class="msg-body">
+                        <span class="msg-user" style="color:${nameColor}">
+                            ${msg.username}
+                        </span>
+                        <div class="msg-bubble">
+                            <div class="msg-text">${msg.text}</div>
+                            <div class="msg-footer">
+                                ${isAdmin ? '<span class="msg-check">✓✓</span>' : ''}
+                                <span class="msg-time">${msg.time} WIB</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Hide name if grouped (not first in group)
+                if (!isFirstInGroup) {
+                    const nameEl = div.querySelector('.msg-user');
+                    nameEl.classList.add('hidden');
+                }
+
+                container.appendChild(div);
+            });
+
+        }
+
+        socket.on('init_messages', (msgs) => {
+            lastMessageCount = msgs.length;
+            render(msgs);
+        });
+
+        socket.on('update_messages', render);
+    </script>
+</body>
+</html>
